@@ -1,19 +1,17 @@
 package view;
 
-import javafx.stage.Stage;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
 
-public class PlayerView {
+public class PlayerView extends Scene {
 
-	
-	
-	public PlayerView() {
-		// TODO Auto-generated constructor stub
+	public PlayerView(Parent root) {
+		super(root, 1024, 768);
+		getStylesheets().add(getClass().getResource("../application/application.css").toExternalForm());
 	}
-	
+
 	public static void Render() {
-		
+
 	}
 
 }

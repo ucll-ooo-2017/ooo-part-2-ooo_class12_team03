@@ -17,4 +17,11 @@ public class PlayerController {
 		
 	}
 
+	public PlayerView getView() {
+		return view;
+	}
+
+	public Player getModel() {
+		return model;
+	}
 }
