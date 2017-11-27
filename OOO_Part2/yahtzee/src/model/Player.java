@@ -14,8 +14,10 @@ public class Player {
 		return name;
 	}
 
-	/* ADD Exception if Name Length equals 0  or PLayer name is not unique*/
 	public void setName(String name) {
+		if(name == null || name.trim().isEmpty()) {
+			throw new IllegalArgumentException();
+		}
 		this.name = name;
 	}
 
