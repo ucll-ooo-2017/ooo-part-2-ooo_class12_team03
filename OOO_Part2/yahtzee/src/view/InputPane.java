@@ -5,16 +5,20 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 public class InputPane extends GridPane {
 
 	private Controller controller;
 
 	private TextField fieldName;
+
+	private Stage stage;
 
 	public InputPane(Controller controller) {
 		this.controller = controller;
@@ -35,6 +39,18 @@ public class InputPane extends GridPane {
 		Button buttonCancel = new Button("Cancel");
 		buttonCancel.setOnAction(new CancelButtonHandler());
 		add(buttonCancel, 1, 1);
+
+		stage = new Stage();
+		stage.setTitle("Input");
+		stage.setScene(new Scene(this));
+	}
+
+	public void show() {
+		stage.show();
+	}
+
+	public void close() {
+		stage.close();
 	}
 
 	public void clearFields() {
@@ -52,7 +68,7 @@ public class InputPane extends GridPane {
 	class CancelButtonHandler implements EventHandler<ActionEvent> {
 		@Override
 		public void handle(ActionEvent event) {
-			clearFields();
+			controller.handleInputCancel();
 		}
 	}
 }

@@ -1,23 +1,19 @@
 package controller;
 
 import model.Player;
-import view.PlayerView;
+import view.YahtzeePane;
 
 public class PlayerController {
 
 	private Player model;
-	private PlayerView view;
-	
-	public PlayerController(Player model, PlayerView view) {
+	private YahtzeePane view;
+
+	public PlayerController(Player model, YahtzeePane view) {
 		this.model = model;
 		this.view = view;
 	}
-	
-	public static void Show() {
-		
-	}
 
-	public PlayerView getView() {
+	public YahtzeePane getView() {
 		return view;
 	}
 

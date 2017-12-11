@@ -1,18 +1,10 @@
 package application;
 
 import controller.Controller;
-import controller.PlayerController;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
-import javafx.scene.layout.BorderPane;
-import model.Player;
-import view.InputPane;
-import view.PlayerView;
-import view.YathzeePane;
-
-import javax.swing.*;
-import java.util.ArrayList;
+import view.YahtzeePane;
 
 
 public class Main extends Application {
@@ -37,11 +29,15 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 		*/
-		YathzeePane pane = new YathzeePane(new Controller());
+		/*
+		YahtzeePane pane = new YahtzeePane(new Controller());
 		//InputPane pane = new InputPane(new Controller());
 		Scene scene = new Scene(pane);
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		*/
+
+		Controller controller = new Controller();
 	}
 
 	public static void main(String[] args) {

@@ -3,7 +3,6 @@ package model;
 public class Player {
 	
 	private String name;
-	public int id;
 
 	public Player(String name) {
 		this.setName(name);

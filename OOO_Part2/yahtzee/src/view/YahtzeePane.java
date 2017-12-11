@@ -3,24 +3,26 @@ package view;
 import controller.Controller;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
+import javafx.stage.Stage;
+import model.Player;
 
 import java.util.Observable;
 import java.util.Observer;
 
-public class YathzeePane extends BorderPane implements Observer {
+public class YahtzeePane extends BorderPane implements Observer {
 
-	Controller controller;
+	private Controller controller;
 
-	Text playing;
+	private Stage stage;
 
-	public YathzeePane(Controller controller) {
+	private Text playing;
+
+	public YahtzeePane(Controller controller) {
 		this.controller = controller;
 
 		this.setPrefSize(1024, 768);
@@ -38,17 +40,28 @@ public class YathzeePane extends BorderPane implements Observer {
 		bottom.setAlignment(Pos.CENTER);
 		this.setBottom(bottom);
 
-		Text yathzee = new Text("Yathzee");
-		yathzee.setFont(new Font(22));
-		top.getChildren().add(yathzee);
+		Text yahtzee = new Text("Yahtzee");
+		yahtzee.setFont(new Font(22));
+		top.getChildren().add(yahtzee);
 
 		playing = new Text("undefined playing");
 		playing.setFont(new Font(22));
 		bottom.getChildren().add(playing);
+
+		stage = new Stage();
+		stage.setTitle("Input");
+		stage.setScene(new Scene(this));
+	}
+
+	public void show() {
+		stage.show();
 	}
 
 	@Override
 	public void update(Observable controller, Object o) {
-		//
+		if (o instanceof Player) {
+			Player player = (Player) o;
+			playing.setText(player.getName() + " playing");
+		}
 	}
 }
