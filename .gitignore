@@ -90,3 +90,7 @@ fabric.properties
 .idea/sonarlint
 
 # End of https://www.gitignore.io/api/intellij
+
+OOO_Part2/yahtzee/\.idea/
+
+*.iml
