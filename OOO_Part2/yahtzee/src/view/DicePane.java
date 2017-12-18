@@ -1,6 +1,7 @@
 package view;
 
 import controller.Controller;
+import controller.DieController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -8,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -28,6 +30,12 @@ public class DicePane extends GridPane implements Observer {
 		rollButton.setText("Roll Dice");
 		rollButton.setOnAction(new ClickHandler());
 		add(rollButton, 0, 0);
+
+		int pos = 0;
+		for (DieController dieController : controller.getDice()) {
+			add(dieController.getView(), pos, 1);
+			pos++;
+		}
 	}
 
 	@Override

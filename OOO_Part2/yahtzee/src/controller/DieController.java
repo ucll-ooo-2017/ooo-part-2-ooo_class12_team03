@@ -4,6 +4,7 @@ import model.Die;
 import view.DieView;
 
 import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 public class DieController extends Observable {
@@ -21,6 +22,7 @@ public class DieController extends Observable {
 
 	public void roll() {
 		model.setValue(random.nextInt(6) + 1);
+		setChanged();
 		notifyObservers(model);
 	}
 

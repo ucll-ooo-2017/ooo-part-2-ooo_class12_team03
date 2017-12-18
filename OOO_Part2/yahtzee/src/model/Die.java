@@ -6,12 +6,12 @@ import javafx.scene.image.Image;
 public class Die {
 
 	private static final Image[] images = {
-			new Image(""), // 1
-			new Image(""), // 2
-			new Image(""), // 3
-			new Image(""), // 4
-			new Image(""), // 5
-			new Image(""), // 6
+			new Image("resources/die/side1.png"), // 1
+			new Image("resources/die/side2.png"), // 2
+			new Image("resources/die/side3.png"), // 3
+			new Image("resources/die/side4.png"), // 4
+			new Image("resources/die/side5.png"), // 5
+			new Image("resources/die/side6.png"), // 6
 	};
 
 	private int value = 1;

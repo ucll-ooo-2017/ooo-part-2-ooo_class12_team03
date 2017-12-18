@@ -7,17 +7,14 @@ import model.Die;
 import java.util.Observable;
 import java.util.Observer;
 
-public class DieView implements Observer {
-
-	private ImageView imageView;
+public class DieView extends ImageView implements Observer {
 
 	public DieView() {
-		imageView = new ImageView();
 	}
 
 	public void update(Observable controller, Object o) {
 		if (o instanceof Die) {
-			imageView.setImage(Die.getImage(((Die) o).getValue()));
+			this.setImage(Die.getImage(((Die) o).getValue()));
 		}
 	}
 }
