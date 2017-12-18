@@ -40,6 +40,12 @@ public class YahtzeePane extends BorderPane implements Observer {
 		bottom.setAlignment(Pos.CENTER);
 		this.setBottom(bottom);
 
+		HBox center = new HBox();
+		center.setPadding(new Insets(16));
+		center.setAlignment(Pos.CENTER_LEFT);
+		this.setCenter(center);
+		center.getChildren().add(new DicePane(controller));
+
 		Text yahtzee = new Text("Yahtzee");
 		yahtzee.setFont(new Font(22));
 		top.getChildren().add(yahtzee);

@@ -1,6 +1,8 @@
 package controller;
 
+import model.Die;
 import model.Player;
+import view.DieView;
 import view.InputPane;
 import view.YahtzeePane;
 
@@ -15,6 +17,8 @@ public class Controller extends Observable {
 	private int playerCount = 0;
 	private ArrayList<PlayerController> players;
 
+	private ArrayList<DieController> dice;
+
 	public Controller() {
 		do {
 			try {
@@ -25,6 +29,10 @@ public class Controller extends Observable {
 		} while(playerCount < 2);
 
 		players = new ArrayList<>(playerCount);
+		dice = new ArrayList<>(5);
+		for (int i = 5; i > 0; --i) {
+			dice.add(new DieController(new Die(), new DieView()));
+		}
 
 		inputPane = new InputPane(this);
 		inputPane.show();
@@ -64,6 +72,12 @@ public class Controller extends Observable {
 			YahtzeePane view = player.getView();
 			view.show();
 			view.update(this, players.get(0).getModel());
+		}
+	}
+
+	public void rollDice() {
+		for (DieController dieController : dice) {
+			dieController.roll();
 		}
 	}
 }
