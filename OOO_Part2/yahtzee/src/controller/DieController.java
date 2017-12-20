@@ -1,42 +1,38 @@
 package controller;
 
 import model.Die;
-import view.DieView;
+import view.ClickableDieView;
 
 import java.util.Observable;
-import java.util.Observer;
 import java.util.Random;
 
 public class DieController extends Observable {
 
-	private Random random;
-	private Die model;
-	private DieView view;
+	private PlayerController playerController;
 
-	public DieController(Die model, DieView view) {
-		setModel(model);
-		setView(view);
-		addObserver(view);
+	private Die model;
+	private ClickableDieView view;
+
+	private Random random;
+
+	public DieController(PlayerController playerController) {
+		this.playerController = playerController;
+		this.model = new Die();
+		this.view = new ClickableDieView(playerController, this);
+		addObserver(this.view);
 		random = new Random();
+	}
+
+	public Die getModel() {
+		return model;
+	}
+	public ClickableDieView getView() {
+		return view;
 	}
 
 	public void roll() {
 		model.setValue(random.nextInt(6) + 1);
 		setChanged();
 		notifyObservers(model);
-	}
-
-	public Die getModel() {
-		return model;
-	}
-	public void setModel(Die model) {
-		this.model = model;
-	}
-
-	public DieView getView() {
-		return view;
-	}
-	public void setView(DieView view) {
-		this.view = view;
 	}
 }

@@ -1,6 +1,6 @@
 package view;
 
-import controller.Controller;
+import controller.PlayerController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -16,47 +16,52 @@ import java.util.Observer;
 
 public class YahtzeePane extends BorderPane implements Observer {
 
-	private Controller controller;
+	private static int WINDOW_WIDTH = 1024;
+	private static int WINDOW_HEIGHT = 768;
+
+	private PlayerController playerController;
 
 	private Stage stage;
 
 	private Text playing;
 
-	public YahtzeePane(Controller controller) {
-		this.controller = controller;
+	public YahtzeePane(PlayerController playerController) {
+		this.playerController = playerController;
 
-		this.setPrefSize(1024, 768);
+		this.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 		this.setStyle("-fx-background-color: #e9967a;");
 
-		HBox top = new HBox();
-		top.setPadding(new Insets(16));
-		top.setStyle("-fx-background-color: #fff;");
-		top.setAlignment(Pos.CENTER);
+		HBox top = createHBox(Pos.CENTER, "#fff");
 		this.setTop(top);
 
-		HBox bottom = new HBox();
-		bottom.setPadding(new Insets(16));
-		bottom.setStyle("-fx-background-color: #fff;");
-		bottom.setAlignment(Pos.CENTER);
+		HBox bottom = createHBox(Pos.CENTER, "#fff");
 		this.setBottom(bottom);
 
-		HBox center = new HBox();
-		center.setPadding(new Insets(16));
-		center.setAlignment(Pos.CENTER_LEFT);
+		HBox center = createHBox(Pos.CENTER_LEFT, "#e9967a");
 		this.setCenter(center);
-		center.getChildren().add(new DicePane(controller));
+		center.getChildren().add(new DicePane(playerController));
+
+		Font font = new Font(22);
 
 		Text yahtzee = new Text("Yahtzee");
-		yahtzee.setFont(new Font(22));
+		yahtzee.setFont(font);
 		top.getChildren().add(yahtzee);
 
 		playing = new Text("undefined playing");
-		playing.setFont(new Font(22));
+		playing.setFont(font);
 		bottom.getChildren().add(playing);
 
 		stage = new Stage();
-		stage.setTitle("Input");
+		stage.setTitle("Yahtzee");
 		stage.setScene(new Scene(this));
+	}
+
+	private HBox createHBox(Pos alignment, String bgColor) {
+		HBox hbox = new HBox();
+		hbox.setPadding(new Insets(16));
+		hbox.setStyle("-fx-background-color: " + bgColor + ";");
+		hbox.setAlignment(alignment);
+		return hbox;
 	}
 
 	public void show() {
@@ -64,7 +69,7 @@ public class YahtzeePane extends BorderPane implements Observer {
 	}
 
 	@Override
-	public void update(Observable controller, Object o) {
+	public void update(Observable playerController, Object o) {
 		if (o instanceof Player) {
 			Player player = (Player) o;
 			playing.setText(player.getName() + " playing");

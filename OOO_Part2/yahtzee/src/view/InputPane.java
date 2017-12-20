@@ -1,6 +1,6 @@
 package view;
 
-import controller.Controller;
+import controller.YahtzeeController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -14,28 +14,27 @@ import javafx.stage.Stage;
 
 public class InputPane extends GridPane {
 
-	private Controller controller;
+	private YahtzeeController yahtzeeController;
 
 	private TextField fieldName;
 
 	private Stage stage;
 
-	public InputPane(Controller controller) {
-		this.controller = controller;
+	public InputPane(YahtzeeController yahtzeeController) {
+		this.yahtzeeController = yahtzeeController;
 
 		this.setHgap(10);
 		this.setVgap(10);
 		this.setAlignment(Pos.BASELINE_CENTER);
-		this.setPadding(new Insets(10, 10, 10, 10));
+		this.setPadding(new Insets(10));
 
-		Text textName = new Text("Name:");
-		add(textName, 0, 0);
+		add(new Text("Name:"), 0, 0);
 		fieldName = new TextField();
 		add(fieldName, 1, 0);
 
 		Button buttonOK = new Button("OK");
 		buttonOK.setOnAction(new OKButtonHandler());
-		add(buttonOK,0,1);
+		add(buttonOK, 0, 1);
 		Button buttonCancel = new Button("Cancel");
 		buttonCancel.setOnAction(new CancelButtonHandler());
 		add(buttonCancel, 1, 1);
@@ -60,7 +59,7 @@ public class InputPane extends GridPane {
 	class OKButtonHandler implements EventHandler<ActionEvent> {
 		@Override
 		public void handle(ActionEvent event) {
-			controller.handleInputOK(fieldName.getText());
+			yahtzeeController.handleInputOK(fieldName.getText());
 			clearFields();
 		}
 	}
@@ -68,7 +67,7 @@ public class InputPane extends GridPane {
 	class CancelButtonHandler implements EventHandler<ActionEvent> {
 		@Override
 		public void handle(ActionEvent event) {
-			controller.handleInputCancel();
+			yahtzeeController.handleInputCancel();
 		}
 	}
 }
