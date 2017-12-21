@@ -1,5 +1,6 @@
 package controller;
 
+import model.Categories;
 import model.Player;
 import view.OtherPlayerDicePane;
 import view.YahtzeePane;
@@ -16,6 +17,9 @@ public class PlayerController extends Observable {
 	private ArrayList<DieAsideController> dieAsideControllers;
 
 	private OtherPlayerDicePane otherPlayerDicePane;
+
+	private int diceRolled = 0;
+	public static int DICE_ROLLED_MAX = 3;
 
 	public PlayerController(String name) {
 		this.model = new Player(name);
@@ -34,8 +38,13 @@ public class PlayerController extends Observable {
 	}
 
 	public void rollDice() {
+		diceRolled++;
 		for (DieController dieController : dieControllers) {
 			dieController.roll();
+		}
+
+		if (diceRolled >= DICE_ROLLED_MAX) {
+			endTurn();
 		}
 	}
 
@@ -50,23 +59,36 @@ public class PlayerController extends Observable {
 	}
 
 	public void endTurn() {
-		// Set all die still on the board aside
+		// Set all die still on the board aside, disallowing any further rolling of the dice
 		for (DieController dieController : dieControllers) {
 			if (dieController.getModel().getValue() != 0) {
 				setDieAside(dieController);
 			}
 		}
-
-		YahtzeeController.getInstance().nextPlayer();
+		// Will disable rolling button
+		diceRolled = DICE_ROLLED_MAX;
+		view.getDicePane().update(null, this); // We'll need to update the view
 	}
 
 	public void resetBoard() {
+		diceRolled = 0;
+		view.getDicePane().update(null, this); // We'll need to update the view
 		for (DieAsideController dieAsideControllerController : dieAsideControllers) {
 			dieAsideControllerController.reset();
 		}
 		for (DieController dieController : dieControllers) {
 			dieController.reset();
 		}
+	}
+
+	public void setCategory(Categories category) {
+		// TODO: Give score etc.
+
+		YahtzeeController.getInstance().nextPlayer();
+	}
+
+	public boolean canRoll() {
+		return diceRolled < DICE_ROLLED_MAX;
 	}
 
 	public Player getModel() {

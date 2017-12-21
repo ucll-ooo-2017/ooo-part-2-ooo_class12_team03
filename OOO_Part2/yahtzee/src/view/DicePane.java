@@ -69,7 +69,7 @@ public class DicePane extends GridPane implements Observer {
 	public void update(Observable controller, Object o) {
 		if (o instanceof PlayerController) {
 			PlayerController activePlayer = YahtzeeController.getInstance().getActivePlayer();
-			rollButton.setVisible(playerController == activePlayer);
+			rollButton.setVisible(playerController == activePlayer && playerController.canRoll());
 		}
 	}
 
@@ -84,6 +84,7 @@ public class DicePane extends GridPane implements Observer {
 		@Override
 		public void handle(ActionEvent event) {
 			playerController.endTurn();
+			playerController.setCategory(categoriesComboBox.getValue());
 		}
 	}
 }
