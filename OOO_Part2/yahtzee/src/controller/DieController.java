@@ -15,6 +15,8 @@ public class DieController extends Observable {
 
 	private Random random;
 
+	private boolean setAside = false;
+
 	public DieController(PlayerController playerController) {
 		this.playerController = playerController;
 		this.model = new Die();
@@ -29,9 +31,21 @@ public class DieController extends Observable {
 	public ClickableDieView getView() {
 		return view;
 	}
+	public PlayerController getPlayerController() {
+		return playerController;
+	}
 
 	public void roll() {
-		model.setValue(random.nextInt(6) + 1);
+		if (!setAside) {
+			model.setValue(random.nextInt(6) + 1);
+			setChanged();
+			notifyObservers(model);
+		}
+	}
+
+	public void setAside() {
+		setAside = true;
+		model.setValue(0);
 		setChanged();
 		notifyObservers(model);
 	}

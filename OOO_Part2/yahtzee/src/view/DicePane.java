@@ -1,5 +1,6 @@
 package view;
 
+import controller.DieAsideController;
 import controller.DieController;
 import controller.PlayerController;
 import javafx.event.ActionEvent;
@@ -31,6 +32,12 @@ public class DicePane extends GridPane implements Observer {
 		int pos = 0;
 		for (DieController dieController : playerController.getDieControllers()) {
 			add(dieController.getView(), pos, 2);
+			pos++;
+		}
+
+		pos = 0;
+		for (DieAsideController dieAsideController : playerController.getDieAsideControllers()) {
+			add(dieAsideController.getView(), pos, 0);
 			pos++;
 		}
 	}

@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 public class Die {
 
 	private static final Image[] images = {
-		null,
+		new Image("resources/die/side0.png"), // Invisible (eg: set aside)
 		new Image("resources/die/side1.png"), // 1
 		new Image("resources/die/side2.png"), // 2
 		new Image("resources/die/side3.png"), // 3
@@ -18,6 +18,9 @@ public class Die {
 
 	public Die() {
 		this.value = 0;
+	}
+	public Die(int value) {
+		setValue(value);
 	}
 
 	public static Image getImage(int value) {

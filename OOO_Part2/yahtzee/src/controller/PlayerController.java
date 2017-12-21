@@ -12,6 +12,7 @@ public class PlayerController extends Observable {
 	private YahtzeePane view;
 
 	private ArrayList<DieController> dieControllers;
+	private ArrayList<DieAsideController> dieAsideControllers;
 
 	public PlayerController(String name) {
 		this.model = new Player(name);
@@ -19,6 +20,10 @@ public class PlayerController extends Observable {
 		dieControllers = new ArrayList<>(5);
 		for (int i = 0; i < 5; i++) {
 			dieControllers.add(new DieController(this));
+		}
+		dieAsideControllers = new ArrayList<>(5);
+		for (int i = 0; i < 5; i++) {
+			dieAsideControllers.add(new DieAsideController(this));
 		}
 
 		this.view = new YahtzeePane(this);
@@ -31,7 +36,13 @@ public class PlayerController extends Observable {
 	}
 
 	public void setDieAside(DieController dieController) {
-		System.out.println(model.getName() + " clicked die with value " + dieController.getModel().getValue());
+		for (DieAsideController dieAsideController : dieAsideControllers) {
+			if (dieAsideController.getModel().getValue() == 0) {
+				dieAsideController.setAside(dieController);
+				dieController.setAside();
+				break;
+			}
+		}
 	}
 
 	public Player getModel() {
@@ -42,5 +53,8 @@ public class PlayerController extends Observable {
 	}
 	public ArrayList<DieController> getDieControllers() {
 		return dieControllers;
+	}
+	public ArrayList<DieAsideController> getDieAsideControllers() {
+		return dieAsideControllers;
 	}
 }
