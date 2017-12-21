@@ -1,12 +1,14 @@
 package controller;
 
 import view.InputPane;
+import view.OtherPlayerDicePane;
 import view.YahtzeePane;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Observable;
 
-public class YahtzeeController {
+public class YahtzeeController extends Observable {
 
 	private static YahtzeeController instance;
 	private static Object mutex = new Object();
@@ -63,7 +65,10 @@ public class YahtzeeController {
 	}
 
 	private void createPlayer(String name) {
-		playerControllers.add(new PlayerController(name));
+		PlayerController playerController = new PlayerController(name);
+		playerControllers.add(playerController);
+		addObserver(playerController.getView());
+		addObserver(playerController.getView().getDicePane());
 		if (playerControllers.size() >= playerCount) {
 			inputPane.close();
 			startGame();
@@ -71,11 +76,38 @@ public class YahtzeeController {
 	}
 
 	private void startGame() {
-		activePlayer = playerControllers.get(0);
+		setActivePlayer(playerControllers.get(0));
+		activePlayer.rollDice();
+	}
+
+	public PlayerController getActivePlayer() {
+		return activePlayer;
+	}
+	public void setActivePlayer(PlayerController activePlayer) {
+		this.activePlayer = activePlayer;
 		for (PlayerController playerController : playerControllers) {
 			YahtzeePane view = playerController.getView();
 			view.show();
 			view.update(playerController, activePlayer.getModel());
+		}
+		setChanged();
+		notifyObservers(activePlayer);
+	}
+
+	public void nextPlayer() {
+		PlayerController nextPlayer = playerControllers.get(
+			playerControllers.indexOf(activePlayer) + 1 >= playerControllers.size() ?
+			0 :
+			playerControllers.indexOf(activePlayer) + 1
+		);
+		setActivePlayer(nextPlayer);
+		activePlayer.resetBoard();
+		activePlayer.rollDice();
+	}
+
+	public void updateOtherPlayerDicePanes() {
+		for (PlayerController playerController : playerControllers) {
+			playerController.getOtherPlayerDicePane().update();
 		}
 	}
 }

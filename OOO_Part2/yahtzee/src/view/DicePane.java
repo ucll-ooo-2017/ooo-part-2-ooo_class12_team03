@@ -3,6 +3,7 @@ package view;
 import controller.DieAsideController;
 import controller.DieController;
 import controller.PlayerController;
+import controller.YahtzeeController;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -21,6 +22,7 @@ public class DicePane extends GridPane implements Observer {
 	private PlayerController playerController;
 
 	private Button rollButton;
+	private Button endTurnButton;
 	private ComboBox<Categories> categoriesComboBox;
 
 	public DicePane(PlayerController playerController) {
@@ -31,26 +33,22 @@ public class DicePane extends GridPane implements Observer {
 		this.setPadding(new Insets(10));
 
 		rollButton = new Button("Roll Dice");
-		rollButton.setOnAction(new ClickHandler());
+		rollButton.setOnAction(new RollButtonHandler());
 		add(rollButton, 0, 1);
 		GridPane.setVgrow(rollButton, Priority.ALWAYS);
 
 		HBox diceBox = new HBox();
 		diceBox.setSpacing(10);
-		int pos = 0;
 		for (DieController dieController : playerController.getDieControllers()) {
 			diceBox.getChildren().add(dieController.getView());
-			pos++;
 		}
 		add(diceBox, 0, 2);
 		GridPane.setVgrow(diceBox, Priority.ALWAYS);
 
 		HBox asideDiceBox = new HBox();
 		asideDiceBox.setSpacing(10);
-		pos = 0;
 		for (DieAsideController dieAsideController : playerController.getDieAsideControllers()) {
 			asideDiceBox.getChildren().add(dieAsideController.getView());
-			pos++;
 		}
 		add(asideDiceBox, 0, 0);
 		GridPane.setVgrow(asideDiceBox, Priority.ALWAYS);
@@ -59,18 +57,33 @@ public class DicePane extends GridPane implements Observer {
 		categoriesComboBox.getItems().addAll(Categories.values());
 		categoriesComboBox.setValue(categoriesComboBox.getItems().get(0));
 		add(categoriesComboBox, 0, 3);
-		GridPane.setVgrow(categoriesComboBox, Priority.ALWAYS);
+		GridPane.setVgrow(categoriesComboBox, Priority.NEVER);
+
+		endTurnButton = new Button("OK");
+		endTurnButton.setOnAction(new EndTurnButtonHandler());
+		add(endTurnButton, 0, 4);
+		GridPane.setVgrow(categoriesComboBox, Priority.NEVER);
 	}
 
 	@Override
 	public void update(Observable controller, Object o) {
-		//
+		if (o instanceof PlayerController) {
+			PlayerController activePlayer = YahtzeeController.getInstance().getActivePlayer();
+			rollButton.setVisible(playerController == activePlayer);
+		}
 	}
 
-	class ClickHandler implements EventHandler<ActionEvent> {
+	class RollButtonHandler implements EventHandler<ActionEvent> {
 		@Override
 		public void handle(ActionEvent event) {
 			playerController.rollDice();
+		}
+	}
+
+	class EndTurnButtonHandler implements EventHandler<ActionEvent> {
+		@Override
+		public void handle(ActionEvent event) {
+			playerController.endTurn();
 		}
 	}
 }

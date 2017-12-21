@@ -29,7 +29,17 @@ public class DieAsideController extends Observable {
 
 	public void setAside(DieController dieController) {
 		model.setValue(dieController.getModel().getValue());
+		update();
+	}
+
+	public void reset() {
+		model.setValue(0);
+		update();
+	}
+
+	public void update() {
 		setChanged();
 		notifyObservers(model);
+		YahtzeeController.getInstance().updateOtherPlayerDicePanes();
 	}
 }

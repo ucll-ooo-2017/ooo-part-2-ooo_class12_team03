@@ -1,6 +1,7 @@
 package view;
 
 import controller.PlayerController;
+import controller.YahtzeeController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -21,6 +22,9 @@ public class YahtzeePane extends BorderPane implements Observer {
 
 	private PlayerController playerController;
 
+	private DicePane dicePane;
+	private OtherPlayerDicePane otherPlayerDicePane;
+
 	private Stage stage;
 
 	private Text playing;
@@ -39,7 +43,10 @@ public class YahtzeePane extends BorderPane implements Observer {
 
 		HBox center = createHBox(Pos.CENTER_LEFT, "#e9967a");
 		this.setCenter(center);
-		center.getChildren().add(new DicePane(playerController));
+		dicePane = new DicePane(playerController);
+		otherPlayerDicePane = playerController.getOtherPlayerDicePane();
+		center.getChildren().add(dicePane);
+		center.getChildren().add(otherPlayerDicePane);
 
 		Font font = new Font(22);
 
@@ -52,7 +59,7 @@ public class YahtzeePane extends BorderPane implements Observer {
 		bottom.getChildren().add(playing);
 
 		stage = new Stage();
-		stage.setTitle("Yahtzee");
+		stage.setTitle("Yahtzee: " + playerController.getModel().getName());
 		stage.setScene(new Scene(this));
 	}
 
@@ -69,10 +76,20 @@ public class YahtzeePane extends BorderPane implements Observer {
 	}
 
 	@Override
-	public void update(Observable playerController, Object o) {
+	public void update(Observable controller, Object o) {
 		if (o instanceof Player) {
 			Player player = (Player) o;
 			playing.setText(player.getName() + " playing");
+
+			boolean active = YahtzeeController.getInstance().getActivePlayer() == playerController;
+			dicePane.setVisible(active);
+			dicePane.setManaged(active);
+			otherPlayerDicePane.setVisible(!active);
+			otherPlayerDicePane.setManaged(!active);
 		}
+	}
+
+	public DicePane getDicePane() {
+		return dicePane;
 	}
 }

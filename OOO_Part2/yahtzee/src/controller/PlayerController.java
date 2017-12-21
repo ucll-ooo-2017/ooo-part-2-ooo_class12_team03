@@ -1,6 +1,7 @@
 package controller;
 
 import model.Player;
+import view.OtherPlayerDicePane;
 import view.YahtzeePane;
 
 import java.util.ArrayList;
@@ -14,8 +15,11 @@ public class PlayerController extends Observable {
 	private ArrayList<DieController> dieControllers;
 	private ArrayList<DieAsideController> dieAsideControllers;
 
+	private OtherPlayerDicePane otherPlayerDicePane;
+
 	public PlayerController(String name) {
 		this.model = new Player(name);
+		this.otherPlayerDicePane = new OtherPlayerDicePane();
 
 		dieControllers = new ArrayList<>(5);
 		for (int i = 0; i < 5; i++) {
@@ -45,6 +49,26 @@ public class PlayerController extends Observable {
 		}
 	}
 
+	public void endTurn() {
+		// Set all die still on the board aside
+		for (DieController dieController : dieControllers) {
+			if (dieController.getModel().getValue() != 0) {
+				setDieAside(dieController);
+			}
+		}
+
+		YahtzeeController.getInstance().nextPlayer();
+	}
+
+	public void resetBoard() {
+		for (DieAsideController dieAsideControllerController : dieAsideControllers) {
+			dieAsideControllerController.reset();
+		}
+		for (DieController dieController : dieControllers) {
+			dieController.reset();
+		}
+	}
+
 	public Player getModel() {
 		return model;
 	}
@@ -56,5 +80,8 @@ public class PlayerController extends Observable {
 	}
 	public ArrayList<DieAsideController> getDieAsideControllers() {
 		return dieAsideControllers;
+	}
+	public OtherPlayerDicePane getOtherPlayerDicePane() {
+		return otherPlayerDicePane;
 	}
 }

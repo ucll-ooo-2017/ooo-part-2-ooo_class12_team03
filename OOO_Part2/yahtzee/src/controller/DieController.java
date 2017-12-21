@@ -2,6 +2,7 @@ package controller;
 
 import model.Die;
 import view.ClickableDieView;
+import view.OtherPlayerDicePane;
 
 import java.util.Observable;
 import java.util.Random;
@@ -38,15 +39,24 @@ public class DieController extends Observable {
 	public void roll() {
 		if (!setAside) {
 			model.setValue(random.nextInt(6) + 1);
-			setChanged();
-			notifyObservers(model);
+			update();
 		}
 	}
 
 	public void setAside() {
 		setAside = true;
 		model.setValue(0);
+		update();
+	}
+
+	public void reset() {
+		setAside = false;
+		roll();
+	}
+
+	public void update() {
 		setChanged();
 		notifyObservers(model);
+		YahtzeeController.getInstance().updateOtherPlayerDicePanes();
 	}
 }
