@@ -88,7 +88,9 @@ public class PlayerController extends Observable {
 
 	public void setCategory(Categories category) {
 		// Yahtzee bonus?
-		if (rolls.containsKey(Categories.YAHTZEE.getName()) && rolls.get(Categories.YAHTZEE.getName()) != 0) {
+		if (getDiceCount(dieAsideControllers.get(0).getModel().getValue()) == dieAsideControllers.size() &&
+				rolls.containsKey(Categories.YAHTZEE.getName()) &&
+				rolls.get(Categories.YAHTZEE.getName()) != 0) {
 			ArrayList<Categories> upper = new ArrayList<>();
 			upper.addAll(Categories.upper());
 			if (!upper.contains(category)) {
@@ -98,12 +100,7 @@ public class PlayerController extends Observable {
 					}
 				}
 			}
-
-			for (Categories cat : Categories.values()) {
-				if (!rolls.containsKey(cat.getName())) {
-					incrementRollList(cat.getName(), 100);
-				}
-			}
+			rolls.put("BONUS", rolls.getOrDefault("BONUS", 0) + 100);
 		}
 
 		// Add points
@@ -131,6 +128,10 @@ public class PlayerController extends Observable {
 			scoreToGrant = hasStraight(5) ? points : 0;
 			break;
 
+		case FULL_HOUSE:
+			scoreToGrant = hasFullHouse() ? points : 0;
+			break;
+
 		case CHANCE:
 			scoreToGrant = getDiceSum();
 			break;
@@ -148,7 +149,10 @@ public class PlayerController extends Observable {
 
 		// Update totals and bonus
 		int numbersSum = getNumbersSum();
-		int bonus = numbersSum < 63 ? 0 : 35;
+		int bonus = rolls.getOrDefault("BONUS", 0);
+		if (numbersSum >= 63 && bonus % 100 == 0) {
+			bonus += 35;
+		}
 		int upperTotal = numbersSum + bonus;
 		int lowerTotal = getLowerSum();
 		rolls.put("TOTAL_SCORE", numbersSum);
@@ -240,6 +244,26 @@ public class PlayerController extends Observable {
 			}
 		}
 		return false;
+	}
+
+	private boolean hasFullHouse() {
+		int size1 = getDiceCount(dieAsideControllers.get(0).getModel().getValue());
+		if (rolls.containsKey(Categories.YAHTZEE.getName()) && size1 == dieAsideControllers.size()) {
+			return true;
+		}
+		if (size1 < 2 || size1 > 3) {
+			return false;
+		}
+		int size2;
+		for (DieAsideController dieAsideController : dieAsideControllers) {
+			if (dieAsideController.getModel().getValue() != dieAsideControllers.get(0).getModel().getValue()) {
+				size2 = getDiceCount(dieAsideController.getModel().getValue());
+				if (size1 + size2 != dieAsideControllers.size()) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	public boolean canRoll() {
