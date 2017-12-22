@@ -77,6 +77,9 @@ public class YahtzeePane extends BorderPane implements Observer {
 	public void show() {
 		stage.show();
 	}
+	public void close() {
+		stage.close();
+	}
 
 	@Override
 	public void update(Observable controller, Object o) {

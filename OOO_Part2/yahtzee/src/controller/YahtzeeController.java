@@ -5,6 +5,7 @@ import view.YahtzeePane;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 
 public class YahtzeeController extends Observable {
@@ -56,19 +57,19 @@ public class YahtzeeController extends Observable {
 				return;
 			}
 		}
-		createPlayer(input);
+		createPlayer(input, playerControllers);
 	}
 
 	public void handleInputCancel() {
 		inputPane.close();
 	}
 
-	private void createPlayer(String name) {
+	private void createPlayer(String name, ArrayList controllerCollection) {
 		PlayerController playerController = new PlayerController(name);
-		playerControllers.add(playerController);
+		controllerCollection.add(playerController);
 		addObserver(playerController.getView());
 		addObserver(playerController.getView().getDicePane());
-		if (playerControllers.size() >= playerCount) {
+		if (controllerCollection.size() >= playerCount) {
 			inputPane.close();
 			startGame();
 		}
@@ -99,6 +100,9 @@ public class YahtzeeController extends Observable {
 			0 :
 			playerControllers.indexOf(activePlayer) + 1
 		);
+		if (nextPlayer.isFull()) {
+			endGame();
+		}
 		setActivePlayer(nextPlayer);
 		activePlayer.resetBoard();
 		activePlayer.rollDice();
@@ -108,5 +112,31 @@ public class YahtzeeController extends Observable {
 		for (PlayerController playerController : playerControllers) {
 			playerController.getOtherPlayerDicePane().update();
 		}
+	}
+
+	public void endGame() {
+		// Calculate winner
+		PlayerController winner = playerControllers.get(0);
+		for (PlayerController playerController : playerControllers) {
+			if (playerController.getScore() > winner.getScore()) {
+				winner = playerController;
+			}
+		}
+
+		// Announce winner and ask to play again
+		int reply = JOptionPane.showConfirmDialog(null, winner.getModel().getName() + " won with " + winner.getScore() + " points!\r\n\r\nWould you like to play again?", "Yahtzee", JOptionPane.YES_NO_OPTION);
+		if (reply == JOptionPane.YES_OPTION) {
+			restartGame();
+		} else {
+			System.exit(0);
+		}
+	}
+
+	private void restartGame() {
+		for (PlayerController playerController : playerControllers) {
+			playerController.getView().close();
+			playerController.reset();
+		}
+		startGame();
 	}
 }

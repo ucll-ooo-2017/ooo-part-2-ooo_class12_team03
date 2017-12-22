@@ -26,20 +26,7 @@ public class PlayerController extends Observable {
 
 	public PlayerController(String name) {
 		this.model = new Player(name);
-		this.otherPlayerDicePane = new OtherPlayerDicePane();
-		rolls = new HashMap<>();
-
-		dieControllers = new ArrayList<>(5);
-		for (int i = 0; i < 5; i++) {
-			dieControllers.add(new DieController(this));
-		}
-		dieAsideControllers = new ArrayList<>(5);
-		for (int i = 0; i < 5; i++) {
-			dieAsideControllers.add(new DieAsideController(this));
-		}
-
-		this.view = new YahtzeePane(this);
-		addObserver(view.getScoreTable());
+		reset();
 	}
 
 	public void rollDice() {
@@ -268,6 +255,38 @@ public class PlayerController extends Observable {
 
 	public boolean canRoll() {
 		return diceRolled < DICE_ROLLED_MAX;
+	}
+
+	public boolean isFull() {
+		for (Categories category : Categories.values()) {
+			if (!rolls.containsKey(category.getName())) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public void reset() {
+		diceRolled = 0;
+
+		this.otherPlayerDicePane = new OtherPlayerDicePane();
+		rolls = new HashMap<>();
+
+		dieControllers = new ArrayList<>(5);
+		for (int i = 0; i < 5; i++) {
+			dieControllers.add(new DieController(this));
+		}
+		dieAsideControllers = new ArrayList<>(5);
+		for (int i = 0; i < 5; i++) {
+			dieAsideControllers.add(new DieAsideController(this));
+		}
+
+		this.view = new YahtzeePane(this);
+		addObserver(view.getScoreTable());
+	}
+
+	public int getScore() {
+		return rolls.getOrDefault("GRAND_TOTAL", 0);
 	}
 
 	public Player getModel() {
