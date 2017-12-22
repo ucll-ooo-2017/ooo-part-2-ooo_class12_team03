@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import model.Categories;
 
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -70,6 +71,14 @@ public class DicePane extends GridPane implements Observer {
 		if (o instanceof PlayerController) {
 			PlayerController activePlayer = YahtzeeController.getInstance().getActivePlayer();
 			rollButton.setVisible(playerController == activePlayer && playerController.canRoll());
+		}
+
+		// The only hashmap that would be sent to this is the rolls map
+		if (o instanceof HashMap) {
+			HashMap<String, Integer> rolls = (HashMap<String, Integer>) o;
+			rolls.forEach((category, points) -> {
+				categoriesComboBox.getItems().remove(Categories.find(category));
+			});
 		}
 	}
 

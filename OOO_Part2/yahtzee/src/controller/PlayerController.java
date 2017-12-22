@@ -88,30 +88,37 @@ public class PlayerController extends Observable {
 
 	public void setCategory(Categories category) {
 		int points = category.getPoints();
+		int scoreToGrant;
 		switch (category) {
 		case ACES: case TWOS: case THREES: case FOURS: case FIVES: case SIXES:
-			incrementRollList(category.getName(), points * getDiceCount(points));
+			scoreToGrant = points * getDiceCount(points);
 			break;
 
 		case THREE_OF_A_KIND: case FOUR_OF_A_KIND:
-			incrementRollList(category.getName(), getDiceCount(points) >= points ? getDiceSum() : 0 );
+			scoreToGrant = getDiceCount(points) >= points ? getDiceSum() : 0;
 			break;
 
 		case SMALL_STRAIGHT:
-			incrementRollList(category.getName(), hasStraight(4) ? points : 0);
+			scoreToGrant = hasStraight(4) ? points : 0;
 			break;
 
 		case LARGE_STRAIGHT:
-			incrementRollList(category.getName(), hasStraight(5) ? points : 0);
+			scoreToGrant = hasStraight(5) ? points : 0;
 			break;
 
 		case CHANCE:
-			incrementRollList(category.getName(), getDiceSum());
+			scoreToGrant = getDiceSum();
 			break;
 
 		case YAHTZEE:
-			incrementRollList(category.getName(), getDiceCount(dieAsideControllers.get(0).getModel().getValue()) == dieAsideControllers.size() ? 50 : 0);
+			scoreToGrant = getDiceCount(dieAsideControllers.get(0).getModel().getValue()) == dieAsideControllers.size() ? 50 : 0;
 			break;
+
+		default:
+			return;
+		}
+		if (!incrementRollList(category.getName(), scoreToGrant)) {
+			return;
 		}
 
 		// Update totals and bonus
@@ -125,9 +132,10 @@ public class PlayerController extends Observable {
 		rolls.put("UPPER_SECTION_TOTAL", upperTotal);
 		rolls.put("LOWER_SECTION_TOTAL", lowerTotal);
 		rolls.put("GRAND_TOTAL", upperTotal + lowerTotal);
-		
+
 		setChanged();
 		notifyObservers(rolls);
+		view.getDicePane().update(this, rolls);
 
 		YahtzeeController.getInstance().nextPlayer();
 	}
@@ -155,11 +163,21 @@ public class PlayerController extends Observable {
 		return sum;
 	}
 
+	/*
 	private void incrementRollList(String category, int amount) {
 		if (rolls.containsKey(category)) {
 			rolls.replace(category, rolls.get(category) + amount);
 		} else {
 			rolls.put(category, amount);
+		}
+	}
+	*/
+	private boolean incrementRollList(String category, int amount) {
+		if (rolls.containsKey(category)) {
+			return false;
+		} else {
+			rolls.put(category, amount);
+			return true;
 		}
 	}
 

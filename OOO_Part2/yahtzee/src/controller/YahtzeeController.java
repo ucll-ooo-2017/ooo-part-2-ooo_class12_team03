@@ -1,7 +1,6 @@
 package controller;
 
 import view.InputPane;
-import view.OtherPlayerDicePane;
 import view.YahtzeePane;
 
 import javax.swing.*;
