@@ -24,6 +24,7 @@ public class YahtzeePane extends BorderPane implements Observer {
 
 	private DicePane dicePane;
 	private OtherPlayerDicePane otherPlayerDicePane;
+	private ScoreTable scoreTable;
 
 	private Stage stage;
 
@@ -45,8 +46,10 @@ public class YahtzeePane extends BorderPane implements Observer {
 		this.setCenter(center);
 		dicePane = new DicePane(playerController);
 		otherPlayerDicePane = playerController.getOtherPlayerDicePane();
+		scoreTable = new ScoreTable(playerController);
 		center.getChildren().add(dicePane);
 		center.getChildren().add(otherPlayerDicePane);
+		center.getChildren().add(scoreTable);
 
 		Font font = new Font(22);
 
@@ -91,5 +94,8 @@ public class YahtzeePane extends BorderPane implements Observer {
 
 	public DicePane getDicePane() {
 		return dicePane;
+	}
+	public ScoreTable getScoreTable() {
+		return scoreTable;
 	}
 }

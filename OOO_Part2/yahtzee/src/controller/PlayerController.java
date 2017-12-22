@@ -6,6 +6,7 @@ import view.OtherPlayerDicePane;
 import view.YahtzeePane;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Observable;
 
 public class PlayerController extends Observable {
@@ -18,12 +19,15 @@ public class PlayerController extends Observable {
 
 	private OtherPlayerDicePane otherPlayerDicePane;
 
+	private HashMap<String, Integer> rolls;
+
 	private int diceRolled = 0;
 	public static int DICE_ROLLED_MAX = 3;
 
 	public PlayerController(String name) {
 		this.model = new Player(name);
 		this.otherPlayerDicePane = new OtherPlayerDicePane();
+		rolls = new HashMap<>();
 
 		dieControllers = new ArrayList<>(5);
 		for (int i = 0; i < 5; i++) {
@@ -35,6 +39,7 @@ public class PlayerController extends Observable {
 		}
 
 		this.view = new YahtzeePane(this);
+		addObserver(view.getScoreTable());
 	}
 
 	public void rollDice() {
@@ -82,9 +87,116 @@ public class PlayerController extends Observable {
 	}
 
 	public void setCategory(Categories category) {
-		// TODO: Give score etc.
+		int points = category.getPoints();
+		switch (category) {
+		case ACES: case TWOS: case THREES: case FOURS: case FIVES: case SIXES:
+			incrementRollList(category.getName(), points * getDiceCount(points));
+			break;
+
+		case THREE_OF_A_KIND: case FOUR_OF_A_KIND:
+			incrementRollList(category.getName(), getDiceCount(points) >= points ? getDiceSum() : 0 );
+			break;
+
+		case SMALL_STRAIGHT:
+			incrementRollList(category.getName(), hasStraight(4) ? points : 0);
+			break;
+
+		case LARGE_STRAIGHT:
+			incrementRollList(category.getName(), hasStraight(5) ? points : 0);
+			break;
+
+		case CHANCE:
+			incrementRollList(category.getName(), getDiceSum());
+			break;
+
+		case YAHTZEE:
+			incrementRollList(category.getName(), getDiceCount(dieAsideControllers.get(0).getModel().getValue()) == dieAsideControllers.size() ? 50 : 0);
+			break;
+		}
+
+		// Update totals and bonus
+		int numbersSum = getNumbersSum();
+		int bonus = numbersSum < 63 ? 0 : 35;
+		int upperTotal = numbersSum + bonus;
+		int lowerTotal = getLowerSum();
+		rolls.put("TOTAL_SCORE", numbersSum);
+		rolls.put("BONUS", bonus);
+		rolls.put("TOTAL", upperTotal);
+		rolls.put("UPPER_SECTION_TOTAL", upperTotal);
+		rolls.put("LOWER_SECTION_TOTAL", lowerTotal);
+		rolls.put("GRAND_TOTAL", upperTotal + lowerTotal);
+		
+		setChanged();
+		notifyObservers(rolls);
 
 		YahtzeeController.getInstance().nextPlayer();
+	}
+
+	private int getNumbersSum() {
+		int sum = 0;
+		sum += rolls.getOrDefault(Categories.ACES.getName(), 0);
+		sum += rolls.getOrDefault(Categories.TWOS.getName(), 0);
+		sum += rolls.getOrDefault(Categories.THREES.getName(), 0);
+		sum += rolls.getOrDefault(Categories.FOURS.getName(), 0);
+		sum += rolls.getOrDefault(Categories.FIVES.getName(), 0);
+		sum += rolls.getOrDefault(Categories.SIXES.getName(), 0);
+		return sum;
+	}
+
+	private int getLowerSum() {
+		int sum = 0;
+		sum += rolls.getOrDefault(Categories.THREE_OF_A_KIND.getName(), 0);
+		sum += rolls.getOrDefault(Categories.FOUR_OF_A_KIND.getName(), 0);
+		sum += rolls.getOrDefault(Categories.FULL_HOUSE.getName(), 0);
+		sum += rolls.getOrDefault(Categories.SMALL_STRAIGHT.getName(), 0);
+		sum += rolls.getOrDefault(Categories.LARGE_STRAIGHT.getName(), 0);
+		sum += rolls.getOrDefault(Categories.YAHTZEE.getName(), 0);
+		sum += rolls.getOrDefault(Categories.CHANCE.getName(), 0);
+		return sum;
+	}
+
+	private void incrementRollList(String category, int amount) {
+		if (rolls.containsKey(category)) {
+			rolls.replace(category, rolls.get(category) + amount);
+		} else {
+			rolls.put(category, amount);
+		}
+	}
+
+	private int getDiceCount(int value) {
+		int count = 0;
+		for (DieAsideController dieAsideController : dieAsideControllers) {
+			if (dieAsideController.getModel().getValue() == value) {
+				++count;
+			}
+		}
+		return count;
+	}
+
+	private int getDiceSum() {
+		int sum = 0;
+		for (DieAsideController dieAsideController : dieAsideControllers) {
+			sum += dieAsideController.getModel().getValue();
+		}
+		return sum;
+	}
+
+	private boolean hasStraight(int size) {
+		if (size > 5) {
+			throw new IllegalArgumentException("Straight cannot be larger than 5");
+		}
+		for (int i = 1; i <= 7 - size; ++i) {
+			boolean straight = true;
+			for (int j = i; j < i + size; ++j) {
+				if (getDiceCount(j) < 1) {
+					straight = false;
+				}
+			}
+			if (straight) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean canRoll() {

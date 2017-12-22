@@ -62,7 +62,7 @@ public class DicePane extends GridPane implements Observer {
 		endTurnButton = new Button("OK");
 		endTurnButton.setOnAction(new EndTurnButtonHandler());
 		add(endTurnButton, 0, 4);
-		GridPane.setVgrow(categoriesComboBox, Priority.NEVER);
+		GridPane.setVgrow(endTurnButton, Priority.NEVER);
 	}
 
 	@Override
