@@ -87,15 +87,40 @@ public class PlayerController extends Observable {
 	}
 
 	public void setCategory(Categories category) {
+		// Yahtzee bonus?
+		if (rolls.containsKey(Categories.YAHTZEE.getName()) && rolls.get(Categories.YAHTZEE.getName()) != 0) {
+			ArrayList<Categories> upper = new ArrayList<>();
+			upper.addAll(Categories.upper());
+			if (!upper.contains(category)) {
+				for (Categories cat : upper) {
+					if (!rolls.containsKey(cat.getName())) {
+						return;
+					}
+				}
+			}
+
+			for (Categories cat : Categories.values()) {
+				if (!rolls.containsKey(cat.getName())) {
+					incrementRollList(cat.getName(), 100);
+				}
+			}
+		}
+
+		// Add points
 		int points = category.getPoints();
-		int scoreToGrant;
+		int scoreToGrant = 0;
 		switch (category) {
 		case ACES: case TWOS: case THREES: case FOURS: case FIVES: case SIXES:
 			scoreToGrant = points * getDiceCount(points);
 			break;
 
 		case THREE_OF_A_KIND: case FOUR_OF_A_KIND:
-			scoreToGrant = getDiceCount(points) >= points ? getDiceSum() : 0;
+			for (int i = 1; i <= 6; ++i) {
+				scoreToGrant = getDiceCount(i) >= points ? getDiceSum() : 0;
+				if (scoreToGrant != 0) {
+					break;
+				}
+			}
 			break;
 
 		case SMALL_STRAIGHT:

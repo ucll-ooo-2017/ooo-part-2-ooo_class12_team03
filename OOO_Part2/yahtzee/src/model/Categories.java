@@ -48,4 +48,15 @@ public enum Categories {
 		}
 		return null;
 	}
+
+	public static ArrayList<Categories> upper() {
+		ArrayList<Categories> categories = new ArrayList<>();
+		categories.add(Categories.ACES);
+		categories.add(Categories.TWOS);
+		categories.add(Categories.THREES);
+		categories.add(Categories.FOURS);
+		categories.add(Categories.FIVES);
+		categories.add(Categories.SIXES);
+		return categories;
+	}
 }
