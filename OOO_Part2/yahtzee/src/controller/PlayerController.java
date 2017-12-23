@@ -50,6 +50,16 @@ public class PlayerController extends Observable {
 		}
 	}
 
+	public void unsetDieAside(DieAsideController dieAsideController) {
+		for (DieController dieController : dieControllers) {
+			if (dieController.isSetAside()) {
+				dieController.unsetAside(dieAsideController);
+				dieAsideController.unsetAside();
+				break;
+			}
+		}
+	}
+
 	public void endTurn() {
 		// Set all die still on the board aside, disallowing any further rolling of the dice
 		for (DieController dieController : dieControllers) {

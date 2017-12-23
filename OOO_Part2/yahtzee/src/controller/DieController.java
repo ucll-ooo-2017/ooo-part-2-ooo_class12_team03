@@ -35,6 +35,9 @@ public class DieController extends Observable {
 	public PlayerController getPlayerController() {
 		return playerController;
 	}
+	public boolean isSetAside() {
+		return setAside;
+	}
 
 	public void roll() {
 		if (!setAside) {
@@ -46,6 +49,11 @@ public class DieController extends Observable {
 	public void setAside() {
 		setAside = true;
 		model.setValue(0);
+		update();
+	}
+
+	public void unsetAside(DieAsideController dieAsideController) {
+		model.setValue(dieAsideController.getModel().getValue());
 		update();
 	}
 
