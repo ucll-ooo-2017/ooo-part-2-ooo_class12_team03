@@ -64,6 +64,10 @@ public class DicePane extends GridPane implements Observer {
 		endTurnButton.setOnAction(new EndTurnButtonHandler());
 		add(endTurnButton, 0, 4);
 		GridPane.setVgrow(endTurnButton, Priority.NEVER);
+
+		Button quitButton = new Button("Quit");
+		quitButton.setOnAction(new QuitButtonHandler());
+		add(quitButton, 1, 4);
 	}
 
 	@Override
@@ -94,6 +98,13 @@ public class DicePane extends GridPane implements Observer {
 		public void handle(ActionEvent event) {
 			playerController.endTurn();
 			playerController.setCategory(categoriesComboBox.getValue());
+		}
+	}
+
+	class QuitButtonHandler implements EventHandler<ActionEvent> {
+		@Override
+		public void handle(ActionEvent event) {
+			YahtzeeController.getInstance().endGame();
 		}
 	}
 }
