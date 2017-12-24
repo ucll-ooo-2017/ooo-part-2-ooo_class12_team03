@@ -5,7 +5,6 @@ import view.YahtzeePane;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Observable;
 
 public class YahtzeeController extends Observable {
@@ -64,7 +63,7 @@ public class YahtzeeController extends Observable {
 		inputPane.close();
 	}
 
-	private void createPlayer(String name, ArrayList controllerCollection) {
+	private void createPlayer(String name, ArrayList<PlayerController> controllerCollection) {
 		PlayerController playerController = new PlayerController(name);
 		controllerCollection.add(playerController);
 		addObserver(playerController.getView());

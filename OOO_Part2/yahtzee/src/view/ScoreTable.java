@@ -3,7 +3,6 @@ package view;
 import controller.PlayerController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -15,13 +14,9 @@ import java.util.Observer;
 
 public class ScoreTable extends GridPane implements Observer {
 
-	private PlayerController playerController;
-
 	private HashMap<String, TextField> textFields;
 
 	public ScoreTable(PlayerController playerController) {
-		this.playerController = playerController;
-
 		this.setHgap(10);
 		this.setVgap(4);
 		this.setAlignment(Pos.CENTER_RIGHT);

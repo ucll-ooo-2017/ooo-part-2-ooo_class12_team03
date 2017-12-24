@@ -2,7 +2,6 @@ package controller;
 
 import model.Die;
 import view.ClickableDieView;
-import view.OtherPlayerDicePane;
 
 import java.util.Observable;
 import java.util.Random;

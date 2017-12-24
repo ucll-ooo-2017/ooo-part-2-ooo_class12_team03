@@ -7,13 +7,10 @@ import java.util.Observable;
 
 public class DieAsideController extends Observable {
 
-	private PlayerController playerController;
-
 	private Die model;
 	private DieAsideView view;
 
 	public DieAsideController(PlayerController playerController) {
-		this.playerController = playerController;
 		this.model = new Die(0);
 		this.view = new DieAsideView(playerController, this);
 		this.view.setImage(Die.getImage(this.model.getValue()));

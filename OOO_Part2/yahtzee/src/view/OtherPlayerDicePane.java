@@ -7,15 +7,10 @@ import controller.YahtzeeController;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
-import model.Die;
 
 import java.util.ArrayList;
-import java.util.Observable;
 
 public class OtherPlayerDicePane extends GridPane {
-
-	private static OtherPlayerDicePane instance;
-	private static Object mutex = new Object();
 
 	private ArrayList<DieView> dice;
 

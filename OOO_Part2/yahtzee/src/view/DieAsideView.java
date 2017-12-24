@@ -1,7 +1,6 @@
 package view;
 
 import controller.DieAsideController;
-import controller.DieController;
 import controller.PlayerController;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
